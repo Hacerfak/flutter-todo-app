@@ -46,14 +46,57 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("To Do List"),
+        title: TextFormField(
+          controller: textController,
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+            labelText: "Clique aqui para adicionar uma tarefa.",
+          ),
+        ),
       ),
-      body: const Center(
-        child: Text("Olá Mundo"),
+      body: ListView.builder(
+        itemCount: widget.items.length,
+        itemBuilder: (BuildContext context, int index) {
+          final item = widget.items[index];
+          return Dismissible(
+            key: Key(index.toString()),
+            child: CheckboxListTile(
+              value: item.done,
+              onChanged: (value) {
+                setState(() {
+                  item.done = value;
+                });
+              },
+              title: Text(item.title),
+            ),
+            onDismissed: (direction) {
+              setState(() {
+                widget.items.removeAt(index);
+              });
+            },
+            background: Container(
+              color: Colors.red,
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if (textController.text.isEmpty) {
+            return;
+          }
+          setState(() {
+            widget.items.add(Item(textController.text, false));
+            textController.text = "";
+          });
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
