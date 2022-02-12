@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:todo/models/item.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const App());
@@ -36,9 +38,6 @@ class HomePage extends StatefulWidget {
 
   HomePage({Key? key}) : super(key: key) {
     items = [];
-    items.add(Item('Item 1', false));
-    items.add(Item('Item 2', true));
-    items.add(Item('Item 3', false));
   }
 
   @override
@@ -46,7 +45,25 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  _HomePageState() {
+    load();
+  }
   var textController = TextEditingController();
+
+  Future load() async {
+    var preferences = await SharedPreferences.getInstance();
+    var data = preferences.getString('data');
+
+    if (data.isNotEmpty) {
+      Iterable jDecode = jsonDecode(data);
+      List<Item> itemLists = jDecode.map((e) => Item.fromJson(e)).toList();
+      setState(() {
+        widget.items = itemLists;
+      });
+    } else {
+      return;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
