@@ -128,7 +128,7 @@ class _HomeState extends State<Home> {
         leading: CircleAvatar(
           backgroundColor: _getColor(context),
           //child: Text(_listaTarefas[index]['titulo'][0]),
-          child: const Icon(Icons.star),
+          child: const Icon(Icons.check),
         ),
         onTap: () {
           setState(() {
