@@ -60,9 +60,12 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         widget.items = itemLists;
       });
-    } else {
-      return;
     }
+  }
+
+  save() async {
+    var preferences = await SharedPreferences.getInstance();
+    await preferences.setString('data', jsonEncode(widget.items));
   }
 
   @override
@@ -88,6 +91,7 @@ class _HomePageState extends State<HomePage> {
               onChanged: (value) {
                 setState(() {
                   item.done = value;
+                  save();
                 });
               },
               title: Text(item.title),
@@ -95,6 +99,7 @@ class _HomePageState extends State<HomePage> {
             onDismissed: (direction) {
               setState(() {
                 widget.items.removeAt(index);
+                save();
               });
             },
             background: Container(
@@ -111,6 +116,7 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             widget.items.add(Item(textController.text, false));
             textController.text = "";
+            save();
           });
         },
         child: const Icon(Icons.add),
