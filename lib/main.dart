@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
 
     if (data.isNotEmpty) {
       Iterable jDecode = jsonDecode(data);
-      List<Item> itemLists = jDecode.map((e) => Item.fromJson(e)).toList();
+      List<Item> itemLists = jDecode.map((x) => Item.fromJson(x)).toList();
       setState(() {
         widget.items = itemLists;
       });
