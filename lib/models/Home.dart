@@ -166,6 +166,51 @@ class _HomeState extends State<Home> {
     );
   }
 
+  void _escolha(BuildContext context, int item) {
+    switch (item) {
+      case 0:
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Excluir tarefas'),
+              content: const Text('Deseja excluir todas as tarefas?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancelar'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    setState(
+                      () {
+                        _listaTarefas.clear();
+                      },
+                    );
+                    _salvarArquivo();
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Excluir'),
+                ),
+              ],
+            );
+          },
+        );
+        break;
+      case 1:
+        showAboutDialog(
+          context: context,
+          applicationName: 'Lista de Tarefas',
+          applicationVersion: '1.0.0',
+          applicationIcon: const Icon(Icons.info),
+          applicationLegalese: 'Criado por: Eder Gross Cichelero',
+        );
+        break;
+      default:
+        return;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     //_salvarArquivo();
@@ -175,9 +220,18 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text("Lista de tarefas"),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.list),
+          PopupMenuButton<int>(
+            onSelected: (value) => _escolha(context, value),
+            itemBuilder: (context) => [
+              const PopupMenuItem<int>(
+                value: 0,
+                child: Text('Excluir tarefas'),
+              ),
+              const PopupMenuItem<int>(
+                value: 1,
+                child: Text('Sobre'),
+              )
+            ],
           ),
         ],
         //backgroundColor: Colors.yellow,
