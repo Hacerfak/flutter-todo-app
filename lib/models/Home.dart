@@ -5,36 +5,47 @@ import 'dart:async';
 import 'dart:convert';
 
 class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  //Lista de tarefas, variáveis de uso comun
+  //variável com a lista de tarefas.
   List _listaTarefas = [];
-  Map<String, dynamic> _ultimaTarefaRemovida = Map();
-  TextEditingController _controllerTarefa = TextEditingController();
 
+  //Map para armazenar as tarefas removidas pelo dismisseble.
+  Map<String, dynamic> _ultimaTarefaRemovida = <String, dynamic>{};
+
+  //Controller para gerenciar o texto na adição das tarefas
+  final TextEditingController _controllerTarefa = TextEditingController();
+
+  // Função privada para fazer a leitura do arquivo com os dados salvos.
   Future<File> _getFile() async {
     final diretorio = await getApplicationDocumentsDirectory();
     return File("${diretorio.path}/dados.json");
   }
 
+  //Função privada para salvar as tarefas e gravar as alterações no arquivo.
   _salvarTarefa() {
     String textoDigitado = _controllerTarefa.text;
 
-    Map<String, dynamic> tarefa = Map();
+    Map<String, dynamic> tarefa = <String, dynamic>{};
     tarefa["titulo"] = textoDigitado;
     tarefa["realizada"] = false;
 
-    setState(() {
-      _listaTarefas.add(tarefa);
-    });
+    setState(
+      () {
+        _listaTarefas.add(tarefa);
+      },
+    );
+
     _salvarArquivo();
 
     _controllerTarefa.text = "";
   }
 
+  // Função privada para gravar os dados no arquivo json.
   _salvarArquivo() async {
     var arquivo = await _getFile();
 
@@ -42,6 +53,7 @@ class _HomeState extends State<Home> {
     arquivo.writeAsString(dados);
   }
 
+  //Função privada para ler os dados do arquivo que foi lido pela função _getFile().
   _lerArquivo() async {
     try {
       final arquivo = await _getFile();
@@ -51,24 +63,33 @@ class _HomeState extends State<Home> {
     }
   }
 
+  //Ao inicializar a classe, fizemos a leitura de dados de tarefas previamento salvas em outra execução do aplicativo.
   @override
   void initState() {
     super.initState();
 
-    _lerArquivo().then((dados) {
-      setState(() {
-        _listaTarefas = json.decode(dados);
-      });
-    });
+    _lerArquivo().then(
+      (dados) {
+        setState(
+          () {
+            _listaTarefas = json.decode(dados);
+          },
+        );
+      },
+    );
   }
 
+  ///Criamos cada item da lista utilizando um Dismisseble, e como filho um list tile para exibir as informações dos itens.
+  ///Junto é criado um snackbar para desfazer a exclusão de um item utilizando a feature do dismisseble.
   Widget criarItemLista(context, index) {
+    //Define a cor de cada item com base na cor primária do projeto (Azul)
     Color _getColor(BuildContext context) {
-      return _listaTarefas[index]['realizada'] //
+      return _listaTarefas[index]['realizada']
           ? Colors.black54
           : Theme.of(context).primaryColor;
     }
 
+    //Define o estilo dos itens, quando o mesmo á marcado como concluído.
     TextStyle? _getTextStyle(BuildContext context) {
       if (!_listaTarefas[index]['realizada']) return null;
 
@@ -80,39 +101,37 @@ class _HomeState extends State<Home> {
 
     return Dismissible(
       key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
-      //direction: DismissDirection.endToStart,
       onDismissed: (direction) {
-        //recuperar último item excluído
+        //Recuperar último item excluído
         _ultimaTarefaRemovida = _listaTarefas[index];
-
-        //Remove item da lista
         _listaTarefas.removeAt(index);
         _salvarArquivo();
 
         //snackbar
         final snackbar = SnackBar(
-          //backgroundColor: Colors.green,
-          duration: Duration(seconds: 5),
-          content: Text("Tarefa removida!!"),
+          duration: const Duration(seconds: 5),
+          content: const Text("Tarefa removida!!"),
           action: SnackBarAction(
-              label: "Desfazer",
-              onPressed: () {
-                //Insere novamente item removido na lista
-                setState(() {
+            label: "Desfazer",
+            onPressed: () {
+              //Insere novamente item removido na lista
+              setState(
+                () {
                   _listaTarefas.insert(index, _ultimaTarefaRemovida);
-                });
-                _salvarArquivo();
-              }),
+                },
+              );
+              _salvarArquivo();
+            },
+          ),
         );
-
-        Scaffold.of(context).showSnackBar(snackbar);
+        ScaffoldMessenger.of(context).showSnackBar(snackbar);
       },
       background: Container(
         color: Colors.red,
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
+          children: const <Widget>[
             Icon(
               Icons.delete,
               color: Colors.white,
@@ -131,13 +150,15 @@ class _HomeState extends State<Home> {
           child: const Icon(Icons.check),
         ),
         onTap: () {
-          setState(() {
-            if (!_listaTarefas[index]['realizada']) {
-              _listaTarefas[index]['realizada'] = true;
-            } else {
-              _listaTarefas[index]['realizada'] = false;
-            }
-          });
+          setState(
+            () {
+              if (!_listaTarefas[index]['realizada']) {
+                _listaTarefas[index]['realizada'] = true;
+              } else {
+                _listaTarefas[index]['realizada'] = false;
+              }
+            },
+          );
 
           _salvarArquivo();
         },
@@ -152,42 +173,50 @@ class _HomeState extends State<Home> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Lista de tarefas"),
+        title: const Text("Lista de tarefas"),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.list),
+          ),
+        ],
         //backgroundColor: Colors.yellow,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          //backgroundColor: Colors.yellow,
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text("Adicionar Tarefa"),
-                    content: TextField(
-                      controller: _controllerTarefa,
-                      decoration:
-                          InputDecoration(labelText: "Digite sua tarefa"),
-                      onChanged: (text) {},
-                    ),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: Text("Cancelar"),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                      FlatButton(
-                        child: Text("Salvar"),
-                        onPressed: () {
-                          //salvar
-                          _salvarTarefa();
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
-                  );
-                });
-          }),
+        child: const Icon(Icons.add),
+        //backgroundColor: Colors.yellow,
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Adicionar Tarefa"),
+                content: TextField(
+                  controller: _controllerTarefa,
+                  decoration:
+                      const InputDecoration(labelText: "Digite sua tarefa"),
+                  onChanged: (text) {},
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text("Cancelar"),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  TextButton(
+                    child: const Text("Salvar"),
+                    onPressed: () {
+                      //salvar
+                      _salvarTarefa();
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              );
+            },
+          );
+        },
+      ),
       body: Column(
         children: <Widget>[
           Expanded(
