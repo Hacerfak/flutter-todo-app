@@ -1,4 +1,4 @@
-# To Do App Exemplo
+# To Do App
 
 Esse é um projeto de estudo do Flutter utilizando Dart.
 
