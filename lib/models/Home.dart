@@ -244,7 +244,7 @@ class _HomeState extends State<Home> {
         showAboutDialog(
           context: context,
           applicationName: 'Lista de Tarefas',
-          applicationVersion: '1.1.1',
+          applicationVersion: '1.2.0',
           applicationIcon: const Icon(Icons.info),
           applicationLegalese: 'Criado por: Eder Gross Cichelero',
         );
