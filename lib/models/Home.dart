@@ -14,9 +14,6 @@ class _HomeState extends State<Home> {
   //variável com a lista de tarefas.
   List _listaTarefas = [];
 
-  //Map para armazenar as tarefas removidas pelo dismisseble.
-  Map<String, dynamic> _ultimaTarefaRemovida = <String, dynamic>{};
-
   //Controller para gerenciar o texto na adição das tarefas
   final TextEditingController _controllerTarefa = TextEditingController();
 
@@ -102,29 +99,37 @@ class _HomeState extends State<Home> {
     return Dismissible(
       key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
       onDismissed: (direction) {
-        //Recuperar último item excluído
-        _ultimaTarefaRemovida = _listaTarefas[index];
-        _listaTarefas.removeAt(index);
-        _salvarArquivo();
-
-        //snackbar
-        final snackbar = SnackBar(
-          duration: const Duration(seconds: 5),
-          content: const Text("Tarefa removida!!"),
-          action: SnackBarAction(
-            label: "Desfazer",
-            onPressed: () {
-              //Insere novamente item removido na lista
-              setState(
-                () {
-                  _listaTarefas.insert(index, _ultimaTarefaRemovida);
-                },
-              );
-              _salvarArquivo();
-            },
-          ),
+        String? tituloExluido = _listaTarefas[index]['titulo'];
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text("Excluir Tarefa"),
+              content: Text("Deseja excluir a tarefa '$tituloExluido' ?"),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text("Cancelar"),
+                  onPressed: () {
+                    //Insere novamente item removido na lista
+                    setState(
+                      () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+                TextButton(
+                  child: const Text("Excluir"),
+                  onPressed: () {
+                    _listaTarefas.removeAt(index);
+                    _salvarArquivo();
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            );
+          },
         );
-        ScaffoldMessenger.of(context).showSnackBar(snackbar);
       },
       background: Container(
         color: Colors.red,
@@ -159,8 +164,46 @@ class _HomeState extends State<Home> {
               }
             },
           );
-
           _salvarArquivo();
+        },
+        onLongPress: () {
+          _controllerTarefa.text = _listaTarefas[index]['titulo'];
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Editar Tarefa"),
+                content: TextField(
+                  controller: _controllerTarefa,
+                  decoration:
+                      const InputDecoration(labelText: "Ajuste sua tarefa"),
+                  autofocus: true,
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text("Cancelar"),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  TextButton(
+                    child: const Text("Alterar"),
+                    onPressed: () {
+                      //salvar
+                      if (_controllerTarefa.text.isNotEmpty) {
+                        setState(
+                          () {
+                            _listaTarefas[index]['titulo'] =
+                                _controllerTarefa.text;
+                          },
+                        );
+                        _salvarArquivo();
+                        Navigator.pop(context);
+                      }
+                    },
+                  )
+                ],
+              );
+            },
+          );
         },
       ),
     );
@@ -201,7 +244,7 @@ class _HomeState extends State<Home> {
         showAboutDialog(
           context: context,
           applicationName: 'Lista de Tarefas',
-          applicationVersion: '1.1.0',
+          applicationVersion: '1.1.1',
           applicationIcon: const Icon(Icons.info),
           applicationLegalese: 'Criado por: Eder Gross Cichelero',
         );
@@ -250,7 +293,7 @@ class _HomeState extends State<Home> {
                   controller: _controllerTarefa,
                   decoration:
                       const InputDecoration(labelText: "Digite sua tarefa"),
-                  onChanged: (text) {},
+                  autofocus: true,
                 ),
                 actions: <Widget>[
                   TextButton(
@@ -258,11 +301,13 @@ class _HomeState extends State<Home> {
                     onPressed: () => Navigator.pop(context),
                   ),
                   TextButton(
-                    child: const Text("Salvar"),
+                    child: const Text("Adicionar"),
                     onPressed: () {
                       //salvar
-                      _salvarTarefa();
-                      Navigator.pop(context);
+                      if (_controllerTarefa.text.isNotEmpty) {
+                        _salvarTarefa();
+                        Navigator.pop(context);
+                      }
                     },
                   )
                 ],
