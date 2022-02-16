@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo/models/Home.dart';
+import 'package:todo/models/home.dart';
 
 void main() => runApp(
       const MaterialApp(
