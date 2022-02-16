@@ -104,8 +104,8 @@ class _HomeState extends State<Home> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: const Text("Excluir Tarefa"),
-              content: Text("Deseja excluir a tarefa '$tituloExluido' ?"),
+              title: const Text("Excluir item"),
+              content: Text("Deseja excluir o item '$tituloExluido' ?"),
               actions: <Widget>[
                 TextButton(
                   child: const Text("Cancelar"),
@@ -172,11 +172,10 @@ class _HomeState extends State<Home> {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: const Text("Editar Tarefa"),
+                title: const Text("Editar item"),
                 content: TextField(
                   controller: _controllerTarefa,
-                  decoration:
-                      const InputDecoration(labelText: "Ajuste sua tarefa"),
+                  decoration: const InputDecoration(labelText: "Descrição"),
                   autofocus: true,
                 ),
                 actions: <Widget>[
@@ -216,8 +215,8 @@ class _HomeState extends State<Home> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: const Text('Excluir tarefas'),
-              content: const Text('Deseja excluir todas as tarefas?'),
+              title: const Text('Excluir itens'),
+              content: const Text('Deseja excluir todos os itens?'),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
@@ -243,7 +242,7 @@ class _HomeState extends State<Home> {
       case 1:
         showAboutDialog(
           context: context,
-          applicationName: 'Lista de Tarefas',
+          applicationName: 'Listas',
           applicationVersion: '1.2.0',
           applicationIcon: const Icon(Icons.info),
           applicationLegalese: 'Criado por: Eder Gross Cichelero',
@@ -261,14 +260,14 @@ class _HomeState extends State<Home> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Lista de tarefas"),
+        title: const Text("Listas"),
         actions: [
           PopupMenuButton<int>(
             onSelected: (value) => _escolha(context, value),
             itemBuilder: (context) => [
               const PopupMenuItem<int>(
                 value: 0,
-                child: Text('Excluir tarefas'),
+                child: Text('Excluir itens'),
               ),
               const PopupMenuItem<int>(
                 value: 1,
@@ -288,11 +287,10 @@ class _HomeState extends State<Home> {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: const Text("Adicionar Tarefa"),
+                title: const Text("Adicionar item"),
                 content: TextField(
                   controller: _controllerTarefa,
-                  decoration:
-                      const InputDecoration(labelText: "Digite sua tarefa"),
+                  decoration: const InputDecoration(labelText: "Descrição"),
                   autofocus: true,
                 ),
                 actions: <Widget>[
