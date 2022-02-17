@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
@@ -16,6 +17,11 @@ class _HomeState extends State<Home> {
 
   //Controller para gerenciar o texto na adição das tarefas
   final TextEditingController _controllerTarefa = TextEditingController();
+
+  //Chave global para validação do formulário
+  final _formKey = GlobalKey<FormState>();
+
+  late PackageInfo packageInfo;
 
   // Função privada para fazer a leitura do arquivo com os dados salvos.
   Future<File> _getFile() async {
@@ -173,10 +179,19 @@ class _HomeState extends State<Home> {
             builder: (context) {
               return AlertDialog(
                 title: const Text("Editar item"),
-                content: TextField(
-                  controller: _controllerTarefa,
-                  decoration: const InputDecoration(labelText: "Descrição"),
-                  autofocus: true,
+                content: Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    controller: _controllerTarefa,
+                    decoration: const InputDecoration(labelText: "Descrição"),
+                    autofocus: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, informe a descrição';
+                      }
+                      return null;
+                    },
+                  ),
                 ),
                 actions: <Widget>[
                   TextButton(
@@ -187,7 +202,7 @@ class _HomeState extends State<Home> {
                     child: const Text("Alterar"),
                     onPressed: () {
                       //salvar
-                      if (_controllerTarefa.text.isNotEmpty) {
+                      if (_formKey.currentState!.validate()) {
                         setState(
                           () {
                             _listaTarefas[index]['titulo'] =
@@ -205,6 +220,17 @@ class _HomeState extends State<Home> {
           );
         },
       ),
+    );
+  }
+
+  void _mostrarInfos() async {
+    packageInfo = await PackageInfo.fromPlatform();
+    showAboutDialog(
+      context: context,
+      applicationName: 'Listas',
+      applicationVersion: packageInfo.version,
+      applicationIcon: const Icon(Icons.info),
+      applicationLegalese: 'Criado por: Eder Gross Cichelero',
     );
   }
 
@@ -240,13 +266,7 @@ class _HomeState extends State<Home> {
         );
         break;
       case 1:
-        showAboutDialog(
-          context: context,
-          applicationName: 'Listas',
-          applicationVersion: '1.2.0',
-          applicationIcon: const Icon(Icons.info),
-          applicationLegalese: 'Criado por: Eder Gross Cichelero',
-        );
+        _mostrarInfos();
         break;
       default:
         return;
@@ -288,10 +308,19 @@ class _HomeState extends State<Home> {
             builder: (context) {
               return AlertDialog(
                 title: const Text("Adicionar item"),
-                content: TextField(
-                  controller: _controllerTarefa,
-                  decoration: const InputDecoration(labelText: "Descrição"),
-                  autofocus: true,
+                content: Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    controller: _controllerTarefa,
+                    decoration: const InputDecoration(labelText: "Descrição"),
+                    autofocus: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, informe a descrição';
+                      }
+                      return null;
+                    },
+                  ),
                 ),
                 actions: <Widget>[
                   TextButton(
@@ -302,7 +331,7 @@ class _HomeState extends State<Home> {
                     child: const Text("Adicionar"),
                     onPressed: () {
                       //salvar
-                      if (_controllerTarefa.text.isNotEmpty) {
+                      if (_formKey.currentState!.validate()) {
                         _salvarTarefa();
                         Navigator.pop(context);
                       }
