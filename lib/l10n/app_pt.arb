@@ -1,0 +1,27 @@
+{
+    "olaMundo": "Olá Mundo!",
+    "titulo": "Listas",
+    "cancelar": "Cancelar",
+    "adicionar": "Adicionar",
+    "adicionarItem": "Adicionar item",
+    "descricao": "Descrição",
+    "erroDescricao": "Por favor, informe a descrição.",
+    "maisOpcoes": "Mais opções",
+    "excluir": "Excluir",
+    "excluirItem": "Excluir item",
+    "excluirItens": "Excluir itens",
+    "excluirTodosItens": "Deseja excluir todos os itens?",
+    "sobre": "Sobre",
+    "dev": "Criado por: Eder Gross Cichelero",
+    "editarItem": "Editar item",
+    "alterar": "Alterar",
+    "confirmarExclusao": "Deseja excluir o item {tituloExluido}?",
+    "@confirmarExclusao": {
+        "placeholders": {
+            "tituloExluido": {
+                "type": "String",
+                "example": "Teste"
+            }
+        }
+    }
+}

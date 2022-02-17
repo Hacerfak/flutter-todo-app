@@ -1,0 +1,19 @@
+{
+    "olaMundo": "Hello World!",
+    "titulo": "Lists",
+    "cancelar": "Cancel",
+    "adicionar": "Add",
+    "adicionarItem": "Add item",
+    "descricao": "Description",
+    "erroDescricao": "Please provide the description.",
+    "maisOpcoes": "More options",
+    "excluir": "Delete",
+    "excluirItem": "Delete item",
+    "confirmarExclusao": "Do you want to delete the {tituloExluido} item?",
+    "excluirItens": "Delete items",
+    "excluirTodosItens": "Do you want to delete all items?",
+    "sobre": "About",
+    "dev": "Created by: Eder Gross Cichelero",
+    "editarItem": "Edit item",
+    "alterar": "Change"
+}

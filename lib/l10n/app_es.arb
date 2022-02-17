@@ -1,0 +1,19 @@
+{
+    "olaMundo": "¡Hola Mundo!",
+    "titulo": "Liza",
+    "cancelar": "Cancelar",
+    "adicionar": "Para agregar",
+    "adicionarItem": "Añadir artículo",
+    "descricao": "Descripción",
+    "erroDescricao": "Proporcione la descripción.",
+    "maisOpcoes": "Mas opciones",
+    "excluir": "Borrar",
+    "excluirItem": "Eliminar elemento",
+    "confirmarExclusao": "¿Desea eliminar el elemento {tituloExluido}?",
+    "excluirItens": "Eliminar objetos",
+    "excluirTodosItens": "¿Desea eliminar todos los elementos?",
+    "sobre": "Acerca de",
+    "dev": "Creado por: Eder Gross Cichelero",
+    "editarItem": "Editar elemento",
+    "alterar": "Alterar"
+}

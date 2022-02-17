@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:io';
@@ -105,16 +106,18 @@ class _HomeState extends State<Home> {
     return Dismissible(
       key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
       onDismissed: (direction) {
-        String? tituloExluido = _listaTarefas[index]['titulo'];
         showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: const Text("Excluir item"),
-              content: Text("Deseja excluir o item '$tituloExluido' ?"),
+              title: Text(AppLocalizations.of(context)!.excluirItem),
+              content: Text(
+                AppLocalizations.of(context)!
+                    .confirmarExclusao(_listaTarefas[index]['titulo']),
+              ),
               actions: <Widget>[
                 TextButton(
-                  child: const Text("Cancelar"),
+                  child: Text(AppLocalizations.of(context)!.cancelar),
                   onPressed: () {
                     //Insere novamente item removido na lista
                     setState(
@@ -125,7 +128,7 @@ class _HomeState extends State<Home> {
                   },
                 ),
                 TextButton(
-                  child: const Text("Excluir"),
+                  child: Text(AppLocalizations.of(context)!.excluir),
                   onPressed: () {
                     _listaTarefas.removeAt(index);
                     _salvarArquivo();
@@ -178,16 +181,17 @@ class _HomeState extends State<Home> {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: const Text("Editar item"),
+                title: Text(AppLocalizations.of(context)!.editarItem),
                 content: Form(
                   key: _formKey,
                   child: TextFormField(
                     controller: _controllerTarefa,
-                    decoration: const InputDecoration(labelText: "Descrição"),
+                    decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.descricao),
                     autofocus: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Por favor, informe a descrição';
+                        return AppLocalizations.of(context)!.erroDescricao;
                       }
                       return null;
                     },
@@ -195,11 +199,11 @@ class _HomeState extends State<Home> {
                 ),
                 actions: <Widget>[
                   TextButton(
-                    child: const Text("Cancelar"),
+                    child: Text(AppLocalizations.of(context)!.cancelar),
                     onPressed: () => Navigator.pop(context),
                   ),
                   TextButton(
-                    child: const Text("Alterar"),
+                    child: Text(AppLocalizations.of(context)!.alterar),
                     onPressed: () {
                       //salvar
                       if (_formKey.currentState!.validate()) {
@@ -227,10 +231,10 @@ class _HomeState extends State<Home> {
     packageInfo = await PackageInfo.fromPlatform();
     showAboutDialog(
       context: context,
-      applicationName: 'Listas',
+      applicationName: AppLocalizations.of(context)!.titulo,
       applicationVersion: packageInfo.version,
       applicationIcon: const Icon(Icons.info),
-      applicationLegalese: 'Criado por: Eder Gross Cichelero',
+      applicationLegalese: AppLocalizations.of(context)!.dev,
     );
   }
 
@@ -241,12 +245,12 @@ class _HomeState extends State<Home> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: const Text('Excluir itens'),
-              content: const Text('Deseja excluir todos os itens?'),
+              title: Text(AppLocalizations.of(context)!.excluirItens),
+              content: Text(AppLocalizations.of(context)!.excluirTodosItens),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Cancelar'),
+                  child: Text(AppLocalizations.of(context)!.cancelar),
                 ),
                 TextButton(
                   onPressed: () {
@@ -258,7 +262,7 @@ class _HomeState extends State<Home> {
                     _salvarArquivo();
                     Navigator.pop(context);
                   },
-                  child: const Text('Excluir'),
+                  child: Text(AppLocalizations.of(context)!.excluir),
                 ),
               ],
             );
@@ -275,24 +279,21 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    //_salvarArquivo();
-    //print("itens: " + DateTime.now().millisecondsSinceEpoch.toString() );
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Listas"),
+        title: Text(AppLocalizations.of(context)!.titulo),
         actions: [
           PopupMenuButton<int>(
             onSelected: (value) => _escolha(context, value),
-            tooltip: 'Mais opções',
+            tooltip: AppLocalizations.of(context)!.maisOpcoes,
             itemBuilder: (context) => [
-              const PopupMenuItem<int>(
+              PopupMenuItem<int>(
                 value: 0,
-                child: Text('Excluir itens'),
+                child: Text(AppLocalizations.of(context)!.excluirItens),
               ),
-              const PopupMenuItem<int>(
+              PopupMenuItem<int>(
                 value: 1,
-                child: Text('Sobre'),
+                child: Text(AppLocalizations.of(context)!.sobre),
               )
             ],
           ),
@@ -301,7 +302,7 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Adicionar item',
+        tooltip: AppLocalizations.of(context)!.adicionar,
         child: const Icon(Icons.add),
         //backgroundColor: Colors.yellow,
         onPressed: () {
@@ -309,16 +310,17 @@ class _HomeState extends State<Home> {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: const Text("Adicionar item"),
+                title: Text(AppLocalizations.of(context)!.adicionarItem),
                 content: Form(
                   key: _formKey,
                   child: TextFormField(
                     controller: _controllerTarefa,
-                    decoration: const InputDecoration(labelText: "Descrição"),
+                    decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.descricao),
                     autofocus: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Por favor, informe a descrição';
+                        return AppLocalizations.of(context)!.erroDescricao;
                       }
                       return null;
                     },
@@ -326,11 +328,11 @@ class _HomeState extends State<Home> {
                 ),
                 actions: <Widget>[
                   TextButton(
-                    child: const Text("Cancelar"),
+                    child: Text(AppLocalizations.of(context)!.cancelar),
                     onPressed: () => Navigator.pop(context),
                   ),
                   TextButton(
-                    child: const Text("Adicionar"),
+                    child: Text(AppLocalizations.of(context)!.adicionar),
                     onPressed: () {
                       //salvar
                       if (_formKey.currentState!.validate()) {
