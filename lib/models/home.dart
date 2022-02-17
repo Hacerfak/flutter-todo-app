@@ -284,6 +284,7 @@ class _HomeState extends State<Home> {
         actions: [
           PopupMenuButton<int>(
             onSelected: (value) => _escolha(context, value),
+            tooltip: 'Mais opções',
             itemBuilder: (context) => [
               const PopupMenuItem<int>(
                 value: 0,
@@ -300,6 +301,7 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
+        tooltip: 'Adicionar item',
         child: const Icon(Icons.add),
         //backgroundColor: Colors.yellow,
         onPressed: () {
