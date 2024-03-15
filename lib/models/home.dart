@@ -89,14 +89,14 @@ class _HomeState extends State<Home> {
   ///Junto é criado um snackbar para desfazer a exclusão de um item utilizando a feature do dismisseble.
   Widget criarItemLista(context, index) {
     //Define a cor de cada item com base na cor primária do projeto (Azul)
-    Color _getColor(BuildContext context) {
+    Color getColor(BuildContext context) {
       return _listaTarefas[index]['realizada']
           ? Colors.black54
           : Theme.of(context).primaryColor;
     }
 
     //Define o estilo dos itens, quando o mesmo á marcado como concluído.
-    TextStyle? _getTextStyle(BuildContext context) {
+    TextStyle? getTextStyle(BuildContext context) {
       if (!_listaTarefas[index]['realizada']) return null;
 
       return const TextStyle(
@@ -158,10 +158,10 @@ class _HomeState extends State<Home> {
       child: ListTile(
         title: Text(
           _listaTarefas[index]['titulo'],
-          style: _getTextStyle(context),
+          style: getTextStyle(context),
         ),
         leading: CircleAvatar(
-          backgroundColor: _getColor(context),
+          backgroundColor: getColor(context),
           //child: Text(_listaTarefas[index]['titulo'][0]),
           child: const Icon(Icons.check),
         ),
