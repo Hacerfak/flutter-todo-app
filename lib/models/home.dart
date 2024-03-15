@@ -145,9 +145,9 @@ class _HomeState extends State<Home> {
       background: Container(
         color: Colors.red,
         padding: const EdgeInsets.all(16),
-        child: Row(
+        child: const Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: const <Widget>[
+          children: <Widget>[
             Icon(
               Icons.delete,
               color: Colors.white,
