@@ -1,4 +1,4 @@
-//Copyright (c) 2022 Eder Gross Cichelero
+//Copyright (c) 2024 Eder Gross Cichelero
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
