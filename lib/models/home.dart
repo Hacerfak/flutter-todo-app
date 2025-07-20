@@ -102,38 +102,10 @@ class _HomeState extends State<Home> {
     return Dismissible(
       key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
       onDismissed: (direction) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text(AppLocalizations.of(context)!.excluirItem),
-              content: Text(
-                AppLocalizations.of(
-                  context,
-                )!.confirmarExclusao(_listaTarefas[index]['titulo']),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: Text(AppLocalizations.of(context)!.cancelar),
-                  onPressed: () {
-                    //Insere novamente item removido na lista
-                    setState(() {
-                      Navigator.pop(context);
-                    });
-                  },
-                ),
-                TextButton(
-                  child: Text(AppLocalizations.of(context)!.excluir),
-                  onPressed: () {
-                    _listaTarefas.removeAt(index);
-                    _salvarArquivo();
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            );
-          },
-        );
+        setState(() {
+          _listaTarefas.removeAt(index);
+          _salvarArquivo();
+        });
       },
       background: Container(
         color: Colors.red,
