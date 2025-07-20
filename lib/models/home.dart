@@ -1,7 +1,7 @@
 //Copyright (c) 2022 Eder Gross Cichelero
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:todo/l10n/app_localizations.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:io';
@@ -40,11 +40,9 @@ class _HomeState extends State<Home> {
     tarefa["titulo"] = textoDigitado;
     tarefa["realizada"] = false;
 
-    setState(
-      () {
-        _listaTarefas.add(tarefa);
-      },
-    );
+    setState(() {
+      _listaTarefas.add(tarefa);
+    });
 
     _salvarArquivo();
 
@@ -74,15 +72,11 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
-    _lerArquivo().then(
-      (dados) {
-        setState(
-          () {
-            _listaTarefas = json.decode(dados);
-          },
-        );
-      },
-    );
+    _lerArquivo().then((dados) {
+      setState(() {
+        _listaTarefas = json.decode(dados);
+      });
+    });
   }
 
   ///Criamos cada item da lista utilizando um Dismisseble, e como filho um list tile para exibir as informações dos itens.
@@ -114,19 +108,18 @@ class _HomeState extends State<Home> {
             return AlertDialog(
               title: Text(AppLocalizations.of(context)!.excluirItem),
               content: Text(
-                AppLocalizations.of(context)!
-                    .confirmarExclusao(_listaTarefas[index]['titulo']),
+                AppLocalizations.of(
+                  context,
+                )!.confirmarExclusao(_listaTarefas[index]['titulo']),
               ),
               actions: <Widget>[
                 TextButton(
                   child: Text(AppLocalizations.of(context)!.cancelar),
                   onPressed: () {
                     //Insere novamente item removido na lista
-                    setState(
-                      () {
-                        Navigator.pop(context);
-                      },
-                    );
+                    setState(() {
+                      Navigator.pop(context);
+                    });
                   },
                 ),
                 TextButton(
@@ -136,7 +129,7 @@ class _HomeState extends State<Home> {
                     _salvarArquivo();
                     Navigator.pop(context);
                   },
-                )
+                ),
               ],
             );
           },
@@ -147,12 +140,7 @@ class _HomeState extends State<Home> {
         padding: const EdgeInsets.all(16),
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Icon(
-              Icons.delete,
-              color: Colors.white,
-            )
-          ],
+          children: <Widget>[Icon(Icons.delete, color: Colors.white)],
         ),
       ),
       child: ListTile(
@@ -166,15 +154,13 @@ class _HomeState extends State<Home> {
           child: const Icon(Icons.check),
         ),
         onTap: () {
-          setState(
-            () {
-              if (!_listaTarefas[index]['realizada']) {
-                _listaTarefas[index]['realizada'] = true;
-              } else {
-                _listaTarefas[index]['realizada'] = false;
-              }
-            },
-          );
+          setState(() {
+            if (!_listaTarefas[index]['realizada']) {
+              _listaTarefas[index]['realizada'] = true;
+            } else {
+              _listaTarefas[index]['realizada'] = false;
+            }
+          });
           _salvarArquivo();
         },
         onLongPress: () {
@@ -189,7 +175,8 @@ class _HomeState extends State<Home> {
                   child: TextFormField(
                     controller: _controllerTarefa,
                     decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.descricao),
+                      labelText: AppLocalizations.of(context)!.descricao,
+                    ),
                     autofocus: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -209,17 +196,15 @@ class _HomeState extends State<Home> {
                     onPressed: () {
                       //salvar
                       if (_formKey.currentState!.validate()) {
-                        setState(
-                          () {
-                            _listaTarefas[index]['titulo'] =
-                                _controllerTarefa.text;
-                          },
-                        );
+                        setState(() {
+                          _listaTarefas[index]['titulo'] =
+                              _controllerTarefa.text;
+                        });
                         _salvarArquivo();
                         Navigator.pop(context);
                       }
                     },
-                  )
+                  ),
                 ],
               );
             },
@@ -256,11 +241,9 @@ class _HomeState extends State<Home> {
                 ),
                 TextButton(
                   onPressed: () {
-                    setState(
-                      () {
-                        _listaTarefas.clear();
-                      },
-                    );
+                    setState(() {
+                      _listaTarefas.clear();
+                    });
                     _salvarArquivo();
                     Navigator.pop(context);
                   },
@@ -288,16 +271,17 @@ class _HomeState extends State<Home> {
           PopupMenuButton<int>(
             onSelected: (value) => _escolha(context, value),
             tooltip: AppLocalizations.of(context)!.maisOpcoes,
-            itemBuilder: (context) => [
-              PopupMenuItem<int>(
-                value: 0,
-                child: Text(AppLocalizations.of(context)!.excluirItens),
-              ),
-              PopupMenuItem<int>(
-                value: 1,
-                child: Text(AppLocalizations.of(context)!.sobre),
-              )
-            ],
+            itemBuilder:
+                (context) => [
+                  PopupMenuItem<int>(
+                    value: 0,
+                    child: Text(AppLocalizations.of(context)!.excluirItens),
+                  ),
+                  PopupMenuItem<int>(
+                    value: 1,
+                    child: Text(AppLocalizations.of(context)!.sobre),
+                  ),
+                ],
           ),
         ],
         //backgroundColor: Colors.yellow,
@@ -318,7 +302,8 @@ class _HomeState extends State<Home> {
                   child: TextFormField(
                     controller: _controllerTarefa,
                     decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.descricao),
+                      labelText: AppLocalizations.of(context)!.descricao,
+                    ),
                     autofocus: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -339,10 +324,10 @@ class _HomeState extends State<Home> {
                       //salvar
                       if (_formKey.currentState!.validate()) {
                         _salvarTarefa();
-                        Navigator.pop(context);
+                        //Navigator.pop(context);
                       }
                     },
-                  )
+                  ),
                 ],
               );
             },
@@ -353,8 +338,10 @@ class _HomeState extends State<Home> {
         children: <Widget>[
           Expanded(
             child: ListView.builder(
-                itemCount: _listaTarefas.length, itemBuilder: criarItemLista),
-          )
+              itemCount: _listaTarefas.length,
+              itemBuilder: criarItemLista,
+            ),
+          ),
         ],
       ),
     );
